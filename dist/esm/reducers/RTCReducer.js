@@ -1,12 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-var initialState = {};
+var initialState = {
+    configure: {
+        appId: "",
+        secretKey: ""
+    },
+    initialize: false
+};
 export var RTCReducer = createSlice({
     name: "RTCReducer",
     initialState: initialState,
     reducers: {
         initReducer: function (state, action) {
-            console.log(state);
-            console.log(action.payload);
+            state.initialize = action.payload;
         }
     }
 });

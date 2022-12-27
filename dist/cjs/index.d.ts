@@ -1,5 +1,5 @@
 import RTCProvider from "./RTCProvider";
 import { useRTCStore } from "./getStore";
-import { UseStore } from "./types/useStoreType";
+import VideoRTC from "./VideoRTC";
+export default VideoRTC;
 export { RTCProvider, useRTCStore };
-export { UseStore };
