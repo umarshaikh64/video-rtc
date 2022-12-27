@@ -1,4 +1,4 @@
-# Video RTC Meeting SDK
+# Video RTC Meeting SDK (For testing)
 
 ## Install ##
 
