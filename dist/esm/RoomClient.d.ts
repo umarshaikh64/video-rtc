@@ -1,0 +1,42 @@
+import { Device, Producer, Transport } from "mediasoup-client/lib/types";
+import { RoomClientProps, mediaType } from "./types/VideoRtc.type";
+declare class RoomClient {
+    socket: any;
+    consumers: any;
+    producers: any;
+    producerLabel: any;
+    eventListeners: any;
+    producerTransport: Transport | null;
+    consumerTransport: Transport | null;
+    device: Device | undefined;
+    _isConnected: boolean;
+    isAudioAllowed: boolean;
+    isVideoAllowed: boolean;
+    camVideo: boolean;
+    camera: string;
+    peer_name: string;
+    peer_id: string;
+    participantsCount: number;
+    producer: Producer | null;
+    static roomId: string;
+    constructor({ socket, room_id, isAudioAllowed, isVideoAllowed, peer_name, successCallback, }: RoomClientProps);
+    createRoom(room_id: string): Promise<void>;
+    join(data: any): Promise<void>;
+    joinAllowed(room: any): Promise<void>;
+    handleRoomInfo(room: any): Promise<void>;
+    loadDevice(routerRtpCapabilities: any): Promise<Device | undefined>;
+    initTransports(device: Device): Promise<void>;
+    startLocalMedia(): void;
+    initSockets(): void;
+    produce(type: mediaType, deviceId?: number | null, swapCamera?: boolean): Promise<void>;
+    consume(producer_id: any, peer_name: any, peer_info: any, type: any): Promise<void>;
+    getConsumeStream(producerId: any, peer_id: any, type: any): Promise<{
+        consumer: import("mediasoup-client/lib/Consumer").Consumer;
+        stream: MediaStream;
+        kind: any;
+    }>;
+    refreshParticipantsCount(): void;
+    event(evt: any): void;
+    on(evt: any, callback: (data: any) => void | any): void;
+}
+export default RoomClient;

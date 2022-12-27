@@ -3,6 +3,8 @@ import io, { Socket } from "socket.io-client";
 import { AppConfigure } from "./types/reducerType";
 import { store } from "./store";
 import { initReducer } from "./reducers/RTCReducer";
+import { RTCJoinType, _EVENTS } from "./types/VideoRtc.type";
+import RoomClient from "./RoomClient";
 
 const BASEURL = "https://localhost:3010";
 
@@ -16,7 +18,7 @@ interface RTCSuccessType {
 
 class VideoRTC extends EventEmitter {
   static socket: Socket | null = null;
-
+  static rc: RoomClient | null = null;
   constructor() {
     super();
   }
@@ -49,10 +51,31 @@ class VideoRTC extends EventEmitter {
     );
   }
 
-  static async onJoin({ roomName }: any): Promise<any> {
-    console.log("new Appp", roomName);
+  static async onJoin({ roomId, user }: RTCJoinType): Promise<void> {
     const initialize = store.getState().RTCReducer.initialize;
-    console.log(initialize);
+    if (initialize && this.socket !== null) {
+      console.log(user);
+      this.rc = new RoomClient({
+        socket: this.socket,
+        room_id: roomId,
+        peer_name: "Umar",
+        isAudioAllowed: true,
+        isVideoAllowed: true,
+        successCallback: () => {
+          console.log("user Connected");
+          new VideoRTC().handelEventFunction();
+        },
+      });
+    } else {
+      throw Error("Video Rtc Sdk is not initialize");
+    }
+  }
+  handelEventFunction() {
+    if (VideoRTC.rc !== null) {
+      VideoRTC.rc.on(_EVENTS.localVideoStream, (data: any) => {
+        this.emit(_EVENTS.localVideoStream, data);
+      });
+    }
   }
 }
 

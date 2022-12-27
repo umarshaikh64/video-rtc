@@ -5,6 +5,8 @@ var events_1 = tslib_1.__importDefault(require("events"));
 var socket_io_client_1 = tslib_1.__importDefault(require("socket.io-client"));
 var store_1 = require("./store");
 var RTCReducer_1 = require("./reducers/RTCReducer");
+var VideoRtc_type_1 = require("./types/VideoRtc.type");
+var RoomClient_1 = tslib_1.__importDefault(require("./RoomClient"));
 var BASEURL = "https://localhost:3010";
 var VideoRTC = /** @class */ (function (_super) {
     tslib_1.__extends(VideoRTC, _super);
@@ -38,18 +40,42 @@ var VideoRTC = /** @class */ (function (_super) {
         });
     };
     VideoRTC.onJoin = function (_a) {
-        var roomName = _a.roomName;
+        var roomId = _a.roomId, user = _a.user;
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var initialize;
             return tslib_1.__generator(this, function (_b) {
-                console.log("new Appp", roomName);
                 initialize = store_1.store.getState().RTCReducer.initialize;
-                console.log(initialize);
+                if (initialize && this.socket !== null) {
+                    console.log(user);
+                    this.rc = new RoomClient_1["default"]({
+                        socket: this.socket,
+                        room_id: roomId,
+                        peer_name: "Umar",
+                        isAudioAllowed: true,
+                        isVideoAllowed: true,
+                        successCallback: function () {
+                            console.log("user Connected");
+                            new VideoRTC().handelEventFunction();
+                        }
+                    });
+                }
+                else {
+                    throw Error("Video Rtc Sdk is not initialize");
+                }
                 return [2 /*return*/];
             });
         });
     };
+    VideoRTC.prototype.handelEventFunction = function () {
+        var _this = this;
+        if (VideoRTC.rc !== null) {
+            VideoRTC.rc.on(VideoRtc_type_1._EVENTS.localVideoStream, function (data) {
+                _this.emit(VideoRtc_type_1._EVENTS.localVideoStream, data);
+            });
+        }
+    };
     VideoRTC.socket = null;
+    VideoRTC.rc = null;
     return VideoRTC;
 }(events_1["default"]));
 exports["default"] = VideoRTC;

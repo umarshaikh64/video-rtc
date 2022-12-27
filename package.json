@@ -1,6 +1,6 @@
 {
   "name": "video-rtc",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",
+    "mediasoup-client": "^3.6.69",
     "pretier": "^0.0.1",
     "react-redux": "^8.0.5",
     "redux": "^4.2.0",
